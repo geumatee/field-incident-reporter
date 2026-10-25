@@ -3,22 +3,34 @@ package com.geumatee.fieldincidentreporter
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.geumatee.fieldincidentreporter.model.Incident
 import com.geumatee.fieldincidentreporter.model.IncidentCategory
 import com.geumatee.fieldincidentreporter.model.IncidentSeverity
 import com.geumatee.fieldincidentreporter.model.IncidentStatus
+import com.geumatee.fieldincidentreporter.ui.list.IncidentListScreen
 import com.geumatee.fieldincidentreporter.ui.theme.FieldIncidentReporterTheme
 import kotlinx.coroutines.launch
 
@@ -50,64 +62,29 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        lifecycleScope.launch {
-            repository.getIncidents()
-            repository.createIncident(
-                Incident(
-                    id = "id",
-                    title = "test",
-                    description = "description",
-                    category = IncidentCategory.OTHER,
-                    severity = IncidentSeverity.LOW,
-                    status = IncidentStatus.OPEN,
-                    location = "location",
-                    imageUrl = "data:image/jpeg;base64,abc",
-                    createdAt = "2026-10-25T10:00:00Z",
-                    updatedAt = "2026-10-26T10:00:00Z"
-                )
-            )
-            repository.updateIncident(
-                Incident(
-                    id = "id",
-                    title = "test*",
-                    description = "description*",
-                    category = IncidentCategory.ELECTRICAL,
-                    severity = IncidentSeverity.HIGH,
-                    status = IncidentStatus.IN_PROGRESS,
-                    location = "location",
-                    imageUrl = "data:image/jpeg;base64,abcde",
-                    createdAt = "2026-10-25T10:00:00Z",
-                    updatedAt = "2026-10-27T10:00:00Z"
-                )
-            )
-            repository.deleteIncident("id")
-        }
-
         setContent {
-            FieldIncidentReporterTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+
+            val systemDark = isSystemInDarkTheme()
+            var isDarkTheme by rememberSaveable { mutableStateOf(systemDark) }
+            FieldIncidentReporterTheme(darkTheme = isDarkTheme) {
+                Surface(modifier = Modifier.fillMaxSize()) {
+                    val navController = rememberNavController()
+                    NavHost(
+                        navController = navController,
+                        startDestination = "incident_list"
+                    ) {
+                        composable("incident_list") {
+                            IncidentListScreen(
+                                isDarkTheme = isDarkTheme,
+                                onToggleTheme = { isDarkTheme = !isDarkTheme },
+                                onRefresh = {
+                                    Log.d("IncidentListScreen", "onCreateIncident")
+                                }
+                            )
+                        }
+                    }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    FieldIncidentReporterTheme {
-        Greeting("Android")
     }
 }

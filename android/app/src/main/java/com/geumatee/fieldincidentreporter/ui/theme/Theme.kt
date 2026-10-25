@@ -9,29 +9,53 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = Slate200,
+    onPrimary = Slate900,
+    primaryContainer = Slate700,
+    onPrimaryContainer = Slate50,
+    secondary = Slate300,
+    onSecondary = Slate900,
+    background = Slate900,
+    onBackground = Slate50,
+    surface = Slate800,
+    onSurface = Slate50,
+    surfaceVariant = Slate700,
+    onSurfaceVariant = Slate300,
+    error = Red200,
+    onError = Red900,
+    errorContainer = Red900,
+    onErrorContainer = Red100
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
+    primary = Slate800,
     onPrimary = Color.White,
+    primaryContainer = Slate200,
+    onPrimaryContainer = Slate900,
+    secondary = Slate600,
     onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    background = Slate50,
+    onBackground = Slate900,
+    surface = Color.White,
+    onSurface = Slate900,
+    surfaceVariant = Slate100,
+    onSurfaceVariant = Slate600,
+    error = Red600,
+    onError = Color.White,
+    errorContainer = Red100,
+    onErrorContainer = Red800
 )
+
+val LocalDarkTheme = compositionLocalOf { false }
 
 @Composable
 fun FieldIncidentReporterTheme(
@@ -50,9 +74,22 @@ fun FieldIncidentReporterTheme(
         else -> LightColorScheme
     }
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
-        content = content
-    )
+    val view = LocalView.current
+
+    if (!view.isInEditMode) {
+        SideEffect {
+            val window = (view.context as? Activity)?.window ?: return@SideEffect
+            val insetsController = WindowCompat.getInsetsController(window, view)
+            insetsController.isAppearanceLightStatusBars = !darkTheme
+            insetsController.isAppearanceLightNavigationBars = !darkTheme
+        }
+    }
+
+    CompositionLocalProvider(LocalDarkTheme provides darkTheme) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = Typography,
+            content = content
+        )
+    }
 }

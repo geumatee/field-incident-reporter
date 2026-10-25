@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.onSubscription
 import java.util.concurrent.atomic.AtomicBoolean
-import kotlin.collections.map
 import kotlin.coroutines.cancellation.CancellationException
 
 class IncidentRepository(private val api: IncidentApiService) {

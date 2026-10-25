@@ -27,5 +27,36 @@
     <string name="category_location_format">%1$s | %2$s</string>
 
     <string name="form_title_create">Report Incident</string>
+    <string name="form_title_edit">Edit Incident</string>
     <string name="cd_back">Back</string>
+    <string name="cd_delete_incident">Delete incident</string>
+    <string name="cd_captured_photo">Captured incident photo</string>
+
+    <string name="dialog_delete_title">Delete Incident</string>
+    <string name="dialog_delete_message">Delete this incident report? This action cannot be undone.</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_cancel">Cancel</string>
+
+    <string name="label_title_required">Title *</string>
+    <string name="placeholder_title">e.g. Water leak near Server Rack B4</string>
+    <string name="label_location_required">Location *</string>
+    <string name="placeholder_location">e.g. Building A - 3F Server Room</string>
+    <string name="label_description">Description</string>
+    <string name="placeholder_description">Describe the issue and immediate impact…</string>
+    <string name="label_category">Category</string>
+    <string name="label_severity">Severity</string>
+    <string name="label_status">Status</string>
+    <string name="label_photo_evidence">Photo Evidence</string>
+
+    <string name="action_take_photo">Take Photo</string>
+    <string name="action_choose_gallery">Choose from Gallery</string>
+    <string name="action_remove_photo">Remove Photo</string>
+    <string name="action_save_changes">Save Changes</string>
+    <string name="action_submit_report">Submit Report</string>
+
+    <string name="error_title_required">Title is required</string>
+    <string name="error_location_required">Location is required</string>
+    <string name="error_load_incident_details">Failed to load incident details.</string>
+    <string name="error_save_incident">Failed to save incident report.</string>
+    <string name="error_delete_incident">Failed to delete incident report.</string>
 </resources>

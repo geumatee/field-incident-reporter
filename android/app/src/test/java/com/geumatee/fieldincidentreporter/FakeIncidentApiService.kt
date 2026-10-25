@@ -15,6 +15,7 @@ class FakeIncidentApiService(
     var errorToThrow: Throwable? = null
     var deleteResponseCode: Int = 200
     var getIncidentsGate: CompletableDeferred<Unit>? = null
+    var getIncidentGate: CompletableDeferred<Unit>? = null
 
     fun setDirectItem(dto: IncidentDto) {
         val index = items.indexOfFirst { it.id == dto.id }
@@ -32,9 +33,10 @@ class FakeIncidentApiService(
     }
 
     override suspend fun getIncident(id: String): IncidentDto {
+        getIncidentGate?.await()
         errorToThrow?.let { throw it }
         return items.find { it.id == id }
-            ?: throw IOException("Incident not found: $id")
+            ?: throw retrofit2.HttpException(Response.error<IncidentDto>(404, "".toResponseBody(null)))
     }
 
     override suspend fun createIncident(incident: IncidentDto): IncidentDto {

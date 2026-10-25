@@ -3,24 +3,18 @@ package com.geumatee.fieldincidentreporter
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -29,11 +23,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.geumatee.fieldincidentreporter.model.Incident
-import com.geumatee.fieldincidentreporter.model.IncidentCategory
-import com.geumatee.fieldincidentreporter.model.IncidentSeverity
-import com.geumatee.fieldincidentreporter.model.IncidentStatus
 import com.geumatee.fieldincidentreporter.ui.form.IncidentFormScreen
+import com.geumatee.fieldincidentreporter.ui.form.IncidentFormViewModel
 import com.geumatee.fieldincidentreporter.ui.list.IncidentListScreen
 import com.geumatee.fieldincidentreporter.ui.list.IncidentListViewModel
 import com.geumatee.fieldincidentreporter.ui.theme.FieldIncidentReporterTheme
@@ -110,7 +101,16 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         ) { backStackEntry ->
+                            val incidentId = backStackEntry.arguments?.getString("incidentId")
+                            val formViewModel: IncidentFormViewModel = viewModel(
+                                factory = IncidentFormViewModel.provideFactory(
+                                    repository = repository,
+                                    incidentId = incidentId
+                                )
+                            )
+
                             IncidentFormScreen(
+                                viewModel = formViewModel,
                                 onNavigateBack = {
                                     if (backStackEntry.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
                                         navController.popBackStack()

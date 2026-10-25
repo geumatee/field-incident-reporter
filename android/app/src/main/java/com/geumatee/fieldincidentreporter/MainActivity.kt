@@ -21,15 +21,19 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.geumatee.fieldincidentreporter.model.Incident
 import com.geumatee.fieldincidentreporter.model.IncidentCategory
 import com.geumatee.fieldincidentreporter.model.IncidentSeverity
 import com.geumatee.fieldincidentreporter.model.IncidentStatus
+import com.geumatee.fieldincidentreporter.ui.form.IncidentFormScreen
 import com.geumatee.fieldincidentreporter.ui.list.IncidentListScreen
 import com.geumatee.fieldincidentreporter.ui.theme.FieldIncidentReporterTheme
 import kotlinx.coroutines.launch
@@ -79,6 +83,30 @@ class MainActivity : ComponentActivity() {
                                 onToggleTheme = { isDarkTheme = !isDarkTheme },
                                 onRefresh = {
                                     Log.d("IncidentListScreen", "onCreateIncident")
+                                },
+                                onCreateIncident = {
+                                    navController.navigate("incident_form") {
+                                        launchSingleTop = true
+                                    }
+                                },
+                            )
+                        }
+
+                        composable(
+                            route = "incident_form?incidentId={incidentId}",
+                            arguments = listOf(
+                                navArgument("incidentId") {
+                                    type = NavType.StringType
+                                    nullable = true
+                                    defaultValue = null
+                                }
+                            )
+                        ) { backStackEntry ->
+                            IncidentFormScreen(
+                                onNavigateBack = {
+                                    if (backStackEntry.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
+                                        navController.popBackStack()
+                                    }
                                 }
                             )
                         }

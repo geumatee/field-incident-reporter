@@ -17,4 +17,8 @@
     <string name="list_title">Field Incidents</string>
     <string name="cd_toggle_theme">Toggle dark theme</string>
     <string name="cd_refresh_incidents">Refresh incidents</string>
+    <string name="fab_report_incident">Report Incident</string>
+
+    <string name="form_title_create">Report Incident</string>
+    <string name="cd_back">Back</string>
 </resources>

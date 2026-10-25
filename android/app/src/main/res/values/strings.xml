@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">FieldIncidentReporter</string>
+
+    <string name="category_equipment">Equipment</string>
+    <string name="category_hazard">Road / Facility Hazard</string>
+    <string name="category_electrical">Electrical</string>
+    <string name="category_other">Other</string>
+
+    <string name="severity_low">Low</string>
+    <string name="severity_medium">Medium</string>
+    <string name="severity_high">High</string>
+
+    <string name="status_open">Open</string>
+    <string name="status_in_progress">In Progress</string>
+    <string name="status_resolved">Resolved</string>
 </resources>

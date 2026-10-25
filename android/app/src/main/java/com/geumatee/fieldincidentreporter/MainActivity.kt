@@ -35,6 +35,7 @@ import com.geumatee.fieldincidentreporter.model.IncidentSeverity
 import com.geumatee.fieldincidentreporter.model.IncidentStatus
 import com.geumatee.fieldincidentreporter.ui.form.IncidentFormScreen
 import com.geumatee.fieldincidentreporter.ui.list.IncidentListScreen
+import com.geumatee.fieldincidentreporter.ui.list.IncidentListViewModel
 import com.geumatee.fieldincidentreporter.ui.theme.FieldIncidentReporterTheme
 import kotlinx.coroutines.launch
 
@@ -78,17 +79,24 @@ class MainActivity : ComponentActivity() {
                         startDestination = "incident_list"
                     ) {
                         composable("incident_list") {
+                            val listViewModel: IncidentListViewModel = viewModel(
+                                factory = IncidentListViewModel.provideFactory(repository)
+                            )
+
                             IncidentListScreen(
+                                viewModel = listViewModel,
                                 isDarkTheme = isDarkTheme,
                                 onToggleTheme = { isDarkTheme = !isDarkTheme },
-                                onRefresh = {
-                                    Log.d("IncidentListScreen", "onCreateIncident")
-                                },
                                 onCreateIncident = {
                                     navController.navigate("incident_form") {
                                         launchSingleTop = true
                                     }
                                 },
+                                onOpenIncident = { id ->
+                                    navController.navigate("incident_form?incidentId=$id") {
+                                        launchSingleTop = true
+                                    }
+                                }
                             )
                         }
 

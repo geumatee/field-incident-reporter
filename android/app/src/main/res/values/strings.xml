@@ -18,6 +18,13 @@
     <string name="cd_toggle_theme">Toggle dark theme</string>
     <string name="cd_refresh_incidents">Refresh incidents</string>
     <string name="fab_report_incident">Report Incident</string>
+    <string name="filter_all">All</string>
+    <string name="error_load_incidents_title">Could not load incidents</string>
+    <string name="error_load_incidents_default">Unable to connect to incident server.</string>
+    <string name="action_retry">Retry</string>
+    <string name="action_reload">Reload</string>
+    <string name="empty_incidents_message">No incidents found for the selected filter.</string>
+    <string name="category_location_format">%1$s | %2$s</string>
 
     <string name="form_title_create">Report Incident</string>
     <string name="cd_back">Back</string>

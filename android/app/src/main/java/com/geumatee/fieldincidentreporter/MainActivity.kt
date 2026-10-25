@@ -15,6 +15,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
+import com.geumatee.fieldincidentreporter.model.Incident
+import com.geumatee.fieldincidentreporter.model.IncidentCategory
+import com.geumatee.fieldincidentreporter.model.IncidentSeverity
+import com.geumatee.fieldincidentreporter.model.IncidentStatus
 import com.geumatee.fieldincidentreporter.ui.theme.FieldIncidentReporterTheme
 import kotlinx.coroutines.launch
 
@@ -38,12 +42,47 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val repository = (application as IncidentApplication).container.incidentRepository
 
         if (Build.VERSION.SDK_INT >= 37) {
             if (checkSelfPermission(PERMISSION_ACCESS_LOCAL_NETWORK) != PackageManager.PERMISSION_GRANTED) {
                 requestLocalNetworkLauncher.launch(PERMISSION_ACCESS_LOCAL_NETWORK)
             }
         }
+
+        lifecycleScope.launch {
+            repository.getIncidents()
+            repository.createIncident(
+                Incident(
+                    id = "id",
+                    title = "test",
+                    description = "description",
+                    category = IncidentCategory.OTHER,
+                    severity = IncidentSeverity.LOW,
+                    status = IncidentStatus.OPEN,
+                    location = "location",
+                    imageUrl = "data:image/jpeg;base64,abc",
+                    createdAt = "2026-10-25T10:00:00Z",
+                    updatedAt = "2026-10-26T10:00:00Z"
+                )
+            )
+            repository.updateIncident(
+                Incident(
+                    id = "id",
+                    title = "test*",
+                    description = "description*",
+                    category = IncidentCategory.ELECTRICAL,
+                    severity = IncidentSeverity.HIGH,
+                    status = IncidentStatus.IN_PROGRESS,
+                    location = "location",
+                    imageUrl = "data:image/jpeg;base64,abcde",
+                    createdAt = "2026-10-25T10:00:00Z",
+                    updatedAt = "2026-10-27T10:00:00Z"
+                )
+            )
+            repository.deleteIncident("id")
+        }
+
         setContent {
             FieldIncidentReporterTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->

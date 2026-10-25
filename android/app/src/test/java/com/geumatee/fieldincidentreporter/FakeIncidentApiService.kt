@@ -2,6 +2,7 @@ package com.geumatee.fieldincidentreporter
 
 import com.geumatee.fieldincidentreporter.data.IncidentApiService
 import com.geumatee.fieldincidentreporter.data.IncidentDto
+import kotlinx.coroutines.CompletableDeferred
 import okhttp3.ResponseBody.Companion.toResponseBody
 import retrofit2.Response
 import java.io.IOException
@@ -13,8 +14,19 @@ class FakeIncidentApiService(
     val items = initialItems.toMutableList()
     var errorToThrow: Throwable? = null
     var deleteResponseCode: Int = 200
+    var getIncidentsGate: CompletableDeferred<Unit>? = null
+
+    fun setDirectItem(dto: IncidentDto) {
+        val index = items.indexOfFirst { it.id == dto.id }
+        if (index >= 0) {
+            items[index] = dto
+        } else {
+            items.add(0, dto)
+        }
+    }
 
     override suspend fun getIncidents(): List<IncidentDto> {
+        getIncidentsGate?.await()
         errorToThrow?.let { throw it }
         return items.toList()
     }

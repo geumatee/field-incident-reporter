@@ -6,12 +6,19 @@ import com.geumatee.fieldincidentreporter.model.IncidentCategory
 import com.geumatee.fieldincidentreporter.model.IncidentSeverity
 import com.geumatee.fieldincidentreporter.model.IncidentStatus
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.io.IOException
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class IncidentRepositoryTest {
 
     private val sampleIncident = Incident(
@@ -29,51 +36,124 @@ class IncidentRepositoryTest {
 
     private val sampleDto = IncidentDto.fromDomain(sampleIncident)
 
-    // --- getIncidents ---
+    // --- incidentsFlow & refreshIncidents ---
 
     @Test
-    fun `getIncidents returns mapped domain incidents on success`() {
-        runBlocking {
-            val fakeApi = FakeIncidentApiService(listOf(sampleDto))
-            val repository = IncidentRepository(fakeApi)
+    fun `incidentsFlow emits initial items and reloads after create update delete`() = runTest {
+        val fakeApi = FakeIncidentApiService(listOf(sampleDto))
+        val repository = IncidentRepository(fakeApi)
 
-            val result = repository.getIncidents()
-
-            assertTrue(result.isSuccess)
-            val incidents = result.getOrThrow()
-            assertEquals(1, incidents.size)
-            assertEquals("inc-101", incidents[0].id)
-            assertEquals("Water leak", incidents[0].title)
-            assertEquals(IncidentCategory.EQUIPMENT, incidents[0].category)
-            assertEquals(IncidentSeverity.HIGH, incidents[0].severity)
-            assertEquals(IncidentStatus.OPEN, incidents[0].status)
+        val emissions = mutableListOf<Result<List<Incident>>>()
+        val collectJob = backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            repository.incidentsFlow.collect { emissions.add(it) }
         }
+
+        assertEquals(1, emissions.size)
+        assertEquals(1, emissions.last().getOrThrow().size)
+
+        val newIncident = sampleIncident.copy(
+            id = "inc-102",
+            title = "Cracked walkway",
+            category = IncidentCategory.HAZARD,
+            severity = IncidentSeverity.MEDIUM
+        )
+        repository.createIncident(newIncident)
+        assertEquals(2, emissions.last().getOrThrow().size)
+
+        val updatedIncident = newIncident.copy(status = IncidentStatus.RESOLVED)
+        repository.updateIncident(updatedIncident)
+        assertEquals(
+            IncidentStatus.RESOLVED,
+            emissions.last().getOrThrow().first { it.id == "inc-102" }.status
+        )
+
+        repository.deleteIncident("inc-102")
+        assertEquals(1, emissions.last().getOrThrow().size)
+
+        collectJob.cancel()
     }
 
     @Test
-    fun `getIncidents returns failure when api throws exception`() {
+    fun `incidentsFlow emits failure when api throws error`() = runTest {
+        val fakeApi = FakeIncidentApiService().apply {
+            errorToThrow = IOException("Network error")
+        }
+        val repository = IncidentRepository(fakeApi)
+
+        val firstResult = repository.incidentsFlow.first()
+
+        assertTrue(firstResult.isFailure)
+        assertEquals("Network error", firstResult.exceptionOrNull()?.message)
+    }
+
+    @Test
+    fun `refreshIncidents while initial onSubscription is in flight cancels initial load and emits fresh result`() = runTest {
+        val gate = CompletableDeferred<Unit>()
+        val fakeApi = FakeIncidentApiService(listOf(sampleDto)).apply {
+            getIncidentsGate = gate
+        }
+        val repository = IncidentRepository(fakeApi)
+
+        val emissions = mutableListOf<Result<List<Incident>>>()
+        val collectJob = backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            repository.incidentsFlow.collect { emissions.add(it) }
+        }
+
+        assertTrue(emissions.isEmpty())
+
+        fakeApi.getIncidentsGate = null
+        repository.refreshIncidents()
+
+        assertEquals(1, emissions.size)
+        assertEquals("Water leak", emissions.single().getOrThrow().single().title)
+
+        collectJob.cancel()
+    }
+
+    // --- getIncident ---
+
+    @Test
+    fun `getIncident updates cached incidentsFlow with fresh item`() = runTest {
+        val fakeApi = FakeIncidentApiService(listOf(sampleDto))
+        val repository = IncidentRepository(fakeApi)
+
+        val firstList = repository.incidentsFlow.first().getOrThrow()
+        assertEquals("Water leak", firstList.first().title)
+
+        fakeApi.setDirectItem(sampleDto.copy(title = "Water leak - updated by operator"))
+        val result = repository.getIncident("inc-101")
+
+        assertTrue(result.isSuccess)
+        assertEquals("Water leak - updated by operator", result.getOrThrow().title)
+
+        val updatedList = repository.incidentsFlow.first().getOrThrow()
+        assertEquals("Water leak - updated by operator", updatedList.first().title)
+    }
+
+    @Test
+    fun `getIncident returns failure when api throws exception`() {
         runBlocking {
             val fakeApi = FakeIncidentApiService().apply {
-                errorToThrow = IOException("Network error")
+                errorToThrow = IOException("Incident not found")
             }
             val repository = IncidentRepository(fakeApi)
 
-            val result = repository.getIncidents()
+            val result = repository.getIncident("inc-999")
 
             assertTrue(result.isFailure)
-            assertEquals("Network error", result.exceptionOrNull()?.message)
+            assertEquals("Incident not found", result.exceptionOrNull()?.message)
         }
     }
 
     @Test(expected = CancellationException::class)
-    fun `getIncidents rethrows CancellationException`() {
+    fun `getIncident rethrows CancellationException`() {
         runBlocking {
             val fakeApi = FakeIncidentApiService().apply {
-                errorToThrow = CancellationException("Job was cancelled")
+                errorToThrow = CancellationException("Cancelled")
             }
             val repository = IncidentRepository(fakeApi)
 
-            repository.getIncidents()
+            repository.getIncident("inc-101")
         }
     }
 

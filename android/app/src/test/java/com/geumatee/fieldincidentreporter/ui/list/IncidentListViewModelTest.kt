@@ -85,12 +85,10 @@ class IncidentListViewModelTest {
             )
         )
 
-        viewModel.loadIncidents()
         val afterCreate = viewModel.uiState.value as IncidentListUiState.Success
         assertEquals(2, afterCreate.incidents.size)
 
         repository.deleteIncident("inc-101")
-        viewModel.loadIncidents()
         val afterDelete = viewModel.uiState.value as IncidentListUiState.Success
         assertEquals(1, afterDelete.incidents.size)
         assertEquals("inc-102", afterDelete.incidents.first().id)

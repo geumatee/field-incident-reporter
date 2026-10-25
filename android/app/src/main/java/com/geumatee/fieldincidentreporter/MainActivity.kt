@@ -51,7 +51,7 @@ class MainActivity : ComponentActivity() {
         if (isGranted) {
             val repository = (application as IncidentApplication).container.incidentRepository
             lifecycleScope.launch {
-                repository.getIncidents()
+                repository.refreshIncidents()
             }
         }
     }

@@ -21,19 +21,27 @@ class IncidentListViewModel(
     val selectedStatus: StateFlow<IncidentStatus?> = _selectedStatus.asStateFlow()
 
     init {
-        loadIncidents()
+        observeIncidents()
+    }
+
+    private fun observeIncidents() {
+        viewModelScope.launch {
+            repository.incidentsFlow.collect { result ->
+                result
+                    .onSuccess { list ->
+                        _uiState.value = IncidentListUiState.Success(list)
+                    }
+                    .onFailure { error ->
+                        _uiState.value = IncidentListUiState.Error(error.message)
+                    }
+            }
+        }
     }
 
     fun loadIncidents() {
         viewModelScope.launch {
             _uiState.value = IncidentListUiState.Loading
-            repository.getIncidents()
-                .onSuccess { list ->
-                    _uiState.value = IncidentListUiState.Success(list)
-                }
-                .onFailure { error ->
-                    _uiState.value = IncidentListUiState.Error(error.message)
-                }
+            repository.refreshIncidents()
         }
     }
 

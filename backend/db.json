@@ -1,0 +1,40 @@
+{
+  "incidents": [
+    {
+      "id": "inc-101",
+      "title": "Water leak near rack B4",
+      "description": "AC pipe dripping water on the floor.",
+      "category": "EQUIPMENT",
+      "severity": "HIGH",
+      "status": "OPEN",
+      "location": "Building A, 3F",
+      "imageUrl": null,
+      "createdAt": "2026-10-23T08:30:00Z",
+      "updatedAt": "2026-10-23T08:30:00Z"
+    },
+    {
+      "id": "inc-102",
+      "title": "Cracked floor at loading dock",
+      "description": "Big crack near the north entrance, easy to trip on.",
+      "category": "HAZARD",
+      "severity": "MEDIUM",
+      "status": "IN_PROGRESS",
+      "location": "North dock",
+      "imageUrl": null,
+      "createdAt": "2026-10-22T14:15:00Z",
+      "updatedAt": "2026-10-23T09:00:00Z"
+    },
+    {
+      "id": "inc-103",
+      "title": "Exit sign flickering",
+      "description": "Light keeps blinking and making a buzzing sound.",
+      "category": "ELECTRICAL",
+      "severity": "LOW",
+      "status": "RESOLVED",
+      "location": "Building B, 1F hallway",
+      "imageUrl": null,
+      "createdAt": "2026-10-21T11:00:00Z",
+      "updatedAt": "2026-10-22T16:45:00Z"
+    }
+  ]
+}

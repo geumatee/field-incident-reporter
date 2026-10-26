@@ -20,13 +20,12 @@ data class IncidentFormUiState(
     @param:StringRes val titleErrorRes: Int? = null,
     @param:StringRes val locationErrorRes: Int? = null,
     val isSubmitting: Boolean = false,
-    val errorMessage: String? = null,
     @param:StringRes val errorMessageRes: Int? = null,
     // Modeled as state per Compose guidance (instead of Channel/SharedFlow) so navigation is never dropped during rotation or recomposition.
     val isSavedOrDeleted: Boolean = false
 ) {
     val hasError: Boolean
-        get() = errorMessage != null || errorMessageRes != null
+        get() = errorMessageRes != null
 
     val isActionButtonsEnabled: Boolean
         get() = !isSubmitting && !isLoadingInitialData && !isLoadingNetwork && !hasError

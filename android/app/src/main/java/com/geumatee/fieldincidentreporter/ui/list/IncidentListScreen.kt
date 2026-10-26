@@ -151,7 +151,7 @@ fun IncidentListScreen(
 
                 is IncidentListUiState.Error -> {
                     IncidentListErrorState(
-                        message = uiState.message,
+                        messageRes = uiState.messageRes,
                         onRetry = onRefresh,
                         modifier = Modifier.navigationBarsPadding()
                     )

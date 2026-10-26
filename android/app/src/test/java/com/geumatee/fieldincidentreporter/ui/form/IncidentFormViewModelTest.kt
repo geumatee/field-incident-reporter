@@ -216,4 +216,23 @@ class IncidentFormViewModelTest {
         assertTrue(viewModel.uiState.value.isSavedOrDeleted)
         assertTrue(fakeApi.getIncidents().isEmpty())
     }
+
+    @Test
+    fun `saveIncident when network throws IOException maps to friendly error string resource`() = runTest {
+        val fakeApi = FakeIncidentApiService().apply {
+            errorToThrow = IOException("Failed to connect to /10.0.2.2:3001")
+        }
+        val repository = IncidentRepository(fakeApi)
+        val viewModel = IncidentFormViewModel(repository, incidentId = null)
+
+        viewModel.onTitleChange("Power Outage")
+        viewModel.onLocationChange("Building B")
+        viewModel.saveIncident()
+
+        val state = viewModel.uiState.value
+        assertEquals(R.string.error_save_incident, state.errorMessageRes)
+        assertFalse(state.isSubmitting)
+        assertTrue(state.hasError)
+        assertFalse(state.isSavedOrDeleted)
+    }
 }

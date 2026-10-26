@@ -1,6 +1,7 @@
 package com.geumatee.fieldincidentreporter.ui.form
 
 import android.graphics.Bitmap
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -37,7 +38,9 @@ class IncidentFormViewModel(
     val uiState: StateFlow<IncidentFormUiState> = _uiState.asStateFlow()
 
     private var hasUserEdited: Boolean = false
+
     private enum class PendingOperation { LOAD, SAVE, DELETE }
+
     private var lastFailedOperation: PendingOperation? = null
 
     init {
@@ -90,7 +93,6 @@ class IncidentFormViewModel(
                 it.copy(
                     isLoadingInitialData = it.createdAt == null,
                     isLoadingNetwork = true,
-                    errorMessage = null,
                     errorMessageRes = null
                 )
             }
@@ -103,7 +105,6 @@ class IncidentFormViewModel(
                         it.copy(
                             isLoadingInitialData = false,
                             isLoadingNetwork = false,
-                            errorMessage = null,
                             errorMessageRes = null
                         )
                     }
@@ -122,12 +123,12 @@ class IncidentFormViewModel(
                             runCatching { repository.refreshIncidents() }
                         }
                     } else {
+                        Log.e("IncidentFormViewModel", "Failed to load incident $id", error)
                         lastFailedOperation = PendingOperation.LOAD
                         _uiState.update {
                             it.copy(
                                 isLoadingInitialData = false,
                                 isLoadingNetwork = false,
-                                errorMessage = error.message,
                                 errorMessageRes = R.string.error_load_incident_details
                             )
                         }
@@ -160,7 +161,7 @@ class IncidentFormViewModel(
     private fun clearSaveErrorIfPresent() {
         if (_uiState.value.errorMessageRes == R.string.error_save_incident) {
             lastFailedOperation = null
-            _uiState.update { it.copy(errorMessage = null, errorMessageRes = null) }
+            _uiState.update { it.copy(errorMessageRes = null) }
         }
     }
 
@@ -221,7 +222,8 @@ class IncidentFormViewModel(
         val trimmedLocation = current.location.trim()
 
         val titleErrorRes = if (trimmedTitle.isEmpty()) R.string.error_title_required else null
-        val locationErrorRes = if (trimmedLocation.isEmpty()) R.string.error_location_required else null
+        val locationErrorRes =
+            if (trimmedLocation.isEmpty()) R.string.error_location_required else null
 
         if (titleErrorRes != null || locationErrorRes != null) {
             _uiState.update {
@@ -234,7 +236,6 @@ class IncidentFormViewModel(
             _uiState.update {
                 it.copy(
                     isSubmitting = true,
-                    errorMessage = null,
                     errorMessageRes = null
                 )
             }
@@ -267,11 +268,11 @@ class IncidentFormViewModel(
                     }
                 }
                 .onFailure { error ->
+                    Log.e("IncidentFormViewModel", "Failed to save incident", error)
                     lastFailedOperation = PendingOperation.SAVE
                     _uiState.update {
                         it.copy(
                             isSubmitting = false,
-                            errorMessage = error.message,
                             errorMessageRes = R.string.error_save_incident
                         )
                     }
@@ -287,7 +288,6 @@ class IncidentFormViewModel(
             _uiState.update {
                 it.copy(
                     isSubmitting = true,
-                    errorMessage = null,
                     errorMessageRes = null
                 )
             }
@@ -299,11 +299,11 @@ class IncidentFormViewModel(
                     }
                 }
                 .onFailure { error ->
+                    Log.e("IncidentFormViewModel", "Failed to delete incident $id", error)
                     lastFailedOperation = PendingOperation.DELETE
                     _uiState.update {
                         it.copy(
                             isSubmitting = false,
-                            errorMessage = error.message,
                             errorMessageRes = R.string.error_delete_incident
                         )
                     }
@@ -318,7 +318,10 @@ class IncidentFormViewModel(
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return IncidentFormViewModel(repository, incidentId) as T
+                return IncidentFormViewModel(
+                    repository,
+                    incidentId
+                ) as T
             }
         }
     }

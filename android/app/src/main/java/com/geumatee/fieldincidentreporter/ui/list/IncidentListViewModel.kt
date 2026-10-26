@@ -1,8 +1,10 @@
 package com.geumatee.fieldincidentreporter.ui.list
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.geumatee.fieldincidentreporter.R
 import com.geumatee.fieldincidentreporter.data.IncidentRepository
 import com.geumatee.fieldincidentreporter.model.IncidentStatus
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,7 +34,9 @@ class IncidentListViewModel(
                         _uiState.value = IncidentListUiState.Success(list)
                     }
                     .onFailure { error ->
-                        _uiState.value = IncidentListUiState.Error(error.message)
+                        Log.e("IncidentListViewModel", "Failed to fetch incidents", error)
+                        _uiState.value =
+                            IncidentListUiState.Error(R.string.error_load_incidents_default)
                     }
             }
         }

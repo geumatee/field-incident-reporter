@@ -220,8 +220,7 @@ fun IncidentFormScreen(
             }
         } else {
             val inputsEnabled = !uiState.isSubmitting
-            val resolvedError = uiState.errorMessage
-                ?: uiState.errorMessageRes?.let { stringResource(it) }
+            val resolvedError = uiState.errorMessageRes?.let { stringResource(it) }
 
             Column(
                 modifier = Modifier

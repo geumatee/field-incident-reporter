@@ -8,6 +8,7 @@ import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import com.geumatee.fieldincidentreporter.R
 import com.geumatee.fieldincidentreporter.model.Incident
 import com.geumatee.fieldincidentreporter.model.IncidentCategory
 import com.geumatee.fieldincidentreporter.model.IncidentSeverity
@@ -211,7 +212,7 @@ class IncidentListScreenTest {
         composeTestRule.setContent {
             FieldIncidentReporterTheme {
                 IncidentListScreen(
-                    uiState = IncidentListUiState.Error("Server offline"),
+                    uiState = IncidentListUiState.Error(),
                     selectedStatus = null,
                     onRefresh = { retryClicked = true },
                     onSelectStatus = {},
@@ -222,7 +223,7 @@ class IncidentListScreenTest {
         }
 
         composeTestRule.onNodeWithText("Could not load incidents").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Server offline").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Unable to connect to incident server.").assertIsDisplayed()
         composeTestRule
             .onNodeWithText("Report Incident", useUnmergedTree = true)
             .assertDoesNotExist()
@@ -232,11 +233,11 @@ class IncidentListScreenTest {
     }
 
     @Test
-    fun displaysDefaultErrorMessageWhenMessageIsNull() {
+    fun displaysDefaultErrorMessageWhenUsingExplicitResource() {
         composeTestRule.setContent {
             FieldIncidentReporterTheme {
                 IncidentListScreen(
-                    uiState = IncidentListUiState.Error(message = null),
+                    uiState = IncidentListUiState.Error(R.string.error_load_incidents_default),
                     selectedStatus = null,
                     onRefresh = {},
                     onSelectStatus = {},

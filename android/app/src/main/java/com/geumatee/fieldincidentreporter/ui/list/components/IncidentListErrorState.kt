@@ -1,6 +1,7 @@
 package com.geumatee.fieldincidentreporter.ui.list.components
 
 import android.content.res.Configuration
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,9 +23,9 @@ import com.geumatee.fieldincidentreporter.ui.theme.FieldIncidentReporterTheme
 
 @Composable
 fun IncidentListErrorState(
-    message: String?,
     onRetry: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    @StringRes messageRes: Int = R.string.error_load_incidents_default
 ) {
     Box(
         modifier = modifier
@@ -42,7 +43,7 @@ fun IncidentListErrorState(
                 fontWeight = FontWeight.SemiBold
             )
             Text(
-                text = message ?: stringResource(R.string.error_load_incidents_default),
+                text = stringResource(messageRes),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -60,7 +61,6 @@ private fun IncidentListErrorStatePreview() {
     FieldIncidentReporterTheme {
         Surface {
             IncidentListErrorState(
-                message = null,
                 onRetry = {}
             )
         }

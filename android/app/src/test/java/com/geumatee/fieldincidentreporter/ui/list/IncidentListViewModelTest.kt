@@ -2,6 +2,7 @@ package com.geumatee.fieldincidentreporter.ui.list
 
 import com.geumatee.fieldincidentreporter.FakeIncidentApiService
 import com.geumatee.fieldincidentreporter.MainDispatcherRule
+import com.geumatee.fieldincidentreporter.R
 import com.geumatee.fieldincidentreporter.data.IncidentDto
 import com.geumatee.fieldincidentreporter.data.IncidentRepository
 import com.geumatee.fieldincidentreporter.model.Incident
@@ -51,6 +52,21 @@ class IncidentListViewModelTest {
 
         val state = viewModel.uiState.value
         assertTrue(state is IncidentListUiState.Error)
+        assertEquals(R.string.error_load_incidents_default, (state as IncidentListUiState.Error).messageRes)
+    }
+
+    @Test
+    fun `loadIncidents when repository throws IOException sets friendly Error state`() = runTest {
+        val fakeApi = FakeIncidentApiService(listOf(seedDto))
+        val repository = IncidentRepository(fakeApi)
+        val viewModel = IncidentListViewModel(repository)
+
+        fakeApi.errorToThrow = IOException("Failed to connect to /10.0.2.2:3001")
+        viewModel.loadIncidents()
+
+        val state = viewModel.uiState.value
+        assertTrue(state is IncidentListUiState.Error)
+        assertEquals(R.string.error_load_incidents_default, (state as IncidentListUiState.Error).messageRes)
     }
 
     @Test

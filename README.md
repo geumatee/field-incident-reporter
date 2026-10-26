@@ -62,7 +62,7 @@ Open `http://localhost:3000` in your browser.
 ```bash
 cd android
 
-# Run 32 unit tests (DTOs, Repository, ViewModels)
+# Run 34 unit tests (DTOs, Repository, ViewModels)
 ./gradlew testDebugUnitTest
 
 # Run Compose UI tests (requires running emulator/device)

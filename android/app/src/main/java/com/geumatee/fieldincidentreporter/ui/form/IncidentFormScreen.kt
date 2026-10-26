@@ -68,6 +68,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+// Stateful overload: injects ViewModel and binds state/events for navigation.
 @Composable
 fun IncidentFormScreen(
     viewModel: IncidentFormViewModel,
@@ -98,6 +99,7 @@ fun IncidentFormScreen(
     )
 }
 
+// Stateless overload (State Hoisting): decoupled from ViewModel to simplify @Preview and UI testing.
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun IncidentFormScreen(

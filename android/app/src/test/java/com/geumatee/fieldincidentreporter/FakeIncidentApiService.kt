@@ -7,6 +7,8 @@ import okhttp3.ResponseBody.Companion.toResponseBody
 import retrofit2.Response
 import java.io.IOException
 
+// Uses a Fake over Mocks per Google testing guidance: avoids brittle method verification,
+// runs faster without reflection, and enables testing async gates and stateful behavior cleanly.
 class FakeIncidentApiService(
     initialItems: List<IncidentDto> = emptyList()
 ) : IncidentApiService {

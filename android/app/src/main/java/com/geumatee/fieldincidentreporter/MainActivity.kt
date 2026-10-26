@@ -35,6 +35,7 @@ import com.geumatee.fieldincidentreporter.ui.theme.FieldIncidentReporterTheme
 class MainActivity : ComponentActivity() {
 
     private companion object {
+        // Android 16 (API 37) requires runtime permission to communicate with local network hosts (10.0.2.2).
         const val PERMISSION_ACCESS_LOCAL_NETWORK = "android.permission.ACCESS_LOCAL_NETWORK"
     }
 

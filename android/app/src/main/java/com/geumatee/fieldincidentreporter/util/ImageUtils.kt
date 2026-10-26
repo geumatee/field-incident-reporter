@@ -15,7 +15,8 @@ object ImageUtils {
             }
         }
 
-    // Resize to max 480px JPEG and encode as Data URI so json-server can persist thumbnails directly.
+    // Downscales to 480px JPEG (~20-40 KB) and encodes as a Data URI instead of multipart/S3 upload.
+    // This allows mock json-server to persist images directly in JSON and both Android and Web to render them seamlessly.
     fun bitmapToBase64DataUri(bitmap: Bitmap, maxDimension: Int = 480): String {
         val ratio = minOf(
             maxDimension.toFloat() / bitmap.width,

@@ -20,6 +20,9 @@ class IncidentApplication : Application() {
     }
 }
 
+// Uses manual DI (AppContainer) per Android guidance to avoid annotation processing (kapt/ksp)
+// and keep the build lightweight while maintaining testability via ViewModel factories.
+// For larger, more complex apps, trading off build speed for Hilt would be preferable to manage scaling graphs.
 class AppContainer {
     // 10.0.2.2 Android emulator host machine's loopback interface
     private val baseUrl = "http://10.0.2.2:3001/"

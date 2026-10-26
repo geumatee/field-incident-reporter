@@ -15,6 +15,7 @@ import kotlin.coroutines.cancellation.CancellationException
 
 class IncidentRepository(private val api: IncidentApiService) {
 
+    // In-memory Single Source of Truth (SSOT) chosen for simplicity; Room/SQLite would be preferred if offline persistence was required.
     private val _incidentsFlow = MutableSharedFlow<Result<List<Incident>>>(
         replay = 1,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
@@ -82,6 +83,7 @@ class IncidentRepository(private val api: IncidentApiService) {
         refreshIncidents()
     }
 
+    // Re-throws CancellationException so coroutine cancellation propagates properly (standard runCatching swallows it).
     private inline fun <T> runCatchingCancellable(block: () -> T): Result<T> =
         runCatching(block).onFailure { if (it is CancellationException) throw it }
 }

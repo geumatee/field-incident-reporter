@@ -69,10 +69,11 @@ cd android
 ./gradlew connectedDebugAndroidTest
 ```
 
-### Web Dashboard Build Check
+### Web Dashboard Checks
 
 ```bash
 cd web-dashboard
+npm run lint
 npm run build
 ```
 

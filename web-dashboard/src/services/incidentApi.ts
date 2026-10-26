@@ -1,6 +1,7 @@
 import { Incident } from "@/types/incident";
 
-export const API_URL = "http://localhost:3001/incidents";
+export const API_URL =
+  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001/incidents";
 
 export async function getIncidents(): Promise<Incident[]> {
   const response = await fetch(`${API_URL}?_sort=createdAt&_order=desc`, {

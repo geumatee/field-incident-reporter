@@ -80,7 +80,8 @@ npm run build
 
 ## Architecture & Notes
 
-- **Manual DI (`AppContainer`):** Kept dependencies lightweight with `AppContainer` instead of Hilt. This avoids kapt/ksp code-generation overhead and keeps clean build times under 4 seconds. For a larger app with dozens of screens, migrating to Hilt would be the right trade-off.
+- **API Contract:** Comprehensive REST endpoint specifications, field ownership, error envelope, and concurrency considerations are documented in [docs/api-contract.md](docs/api-contract.md).
+- **Manual DI (`AppContainer`):** Kept dependencies lightweight with `AppContainer` instead of Hilt. This avoids kapt/ksp code-generation overhead and keeps clean build times fast. For a larger app with dozens of screens, migrating to Hilt would be the right trade-off.
 - **In-Memory SSOT (`MutableSharedFlow`):** `IncidentRepository` exposes an `incidentsFlow` (replay = 1) that automatically refreshes when incidents are created, updated, or deleted. This avoids passing reload callbacks between screens. Room was skipped for simplicity since offline database persistence wasn't required.
 - **Structured Concurrency (`runCatchingCancellable`):** Custom inline wrapper around `runCatching` that re-throws `CancellationException` so coroutine scopes cancel cleanly when leaving screens.
 - **Fakes Over Mocks:** Unit tests use `FakeIncidentApiService` instead of MockK/Mockito to avoid fragile method call verification and enable testing async gates cleanly with `CompletableDeferred`.

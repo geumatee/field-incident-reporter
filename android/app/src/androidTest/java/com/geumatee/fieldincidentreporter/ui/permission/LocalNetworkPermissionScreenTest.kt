@@ -1,11 +1,10 @@
-package com.geumatee.fieldincidentreporter.permission
+package com.geumatee.fieldincidentreporter.ui.permission
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import com.geumatee.fieldincidentreporter.ui.permission.LocalNetworkPermissionScreen
 import com.geumatee.fieldincidentreporter.ui.theme.FieldIncidentReporterTheme
 import org.junit.Assert.assertTrue
 import org.junit.Rule
@@ -17,7 +16,7 @@ class LocalNetworkPermissionScreenTest {
     val composeTestRule = createComposeRule()
 
     @Test
-    fun displaysMessageAndHandlesGrantPermissionAndThemeToggleClicks() {
+    fun `displays message and handles grant permission and theme toggle clicks`() {
         var permissionRequested = false
         var themeToggled = false
 

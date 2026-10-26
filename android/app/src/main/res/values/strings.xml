@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FieldIncidentReporter</string>
+    <string name="app_name">Field Incident Reporter</string>
 
     <string name="category_equipment">Equipment</string>
     <string name="category_hazard">Road / Facility Hazard</string>

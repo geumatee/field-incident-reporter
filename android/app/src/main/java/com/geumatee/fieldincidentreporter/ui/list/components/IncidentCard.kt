@@ -69,7 +69,7 @@ fun IncidentCard(
             if (bitmap != null) {
                 Image(
                     bitmap = bitmap.asImageBitmap(),
-                    contentDescription = incident.title,
+                    contentDescription = null,
                     modifier = Modifier
                         .size(64.dp)
                         .clip(RoundedCornerShape(6.dp))
@@ -132,7 +132,7 @@ private fun formatTimestamp(isoString: String): String {
     return try {
         val instant = Instant.parse(isoString)
         DisplayFormatter.format(instant)
-    } catch (e: Exception) {
+    } catch (_: Exception) {
         isoString
     }
 }

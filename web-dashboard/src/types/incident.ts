@@ -22,6 +22,18 @@ export const CATEGORY_LABELS: Record<IncidentCategory, string> = {
   OTHER: "Other",
 };
 
+export const SEVERITY_LABELS: Record<IncidentSeverity, string> = {
+  HIGH: "High",
+  MEDIUM: "Medium",
+  LOW: "Low",
+};
+
+export const STATUS_LABELS: Record<IncidentStatus, string> = {
+  OPEN: "Open",
+  IN_PROGRESS: "In Progress",
+  RESOLVED: "Resolved",
+};
+
 export const SEVERITY_BADGE_CLASSES: Record<IncidentSeverity, string> = {
   HIGH: "bg-red-100 text-red-800 border-red-200",
   MEDIUM: "bg-amber-100 text-amber-800 border-amber-200",

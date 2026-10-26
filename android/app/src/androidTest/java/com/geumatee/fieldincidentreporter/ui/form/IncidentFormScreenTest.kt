@@ -1,4 +1,4 @@
-package com.geumatee.fieldincidentreporter.form
+package com.geumatee.fieldincidentreporter.ui.form
 
 import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.ui.test.assertIsDisplayed
@@ -14,8 +14,6 @@ import com.geumatee.fieldincidentreporter.R
 import com.geumatee.fieldincidentreporter.model.IncidentCategory
 import com.geumatee.fieldincidentreporter.model.IncidentSeverity
 import com.geumatee.fieldincidentreporter.model.IncidentStatus
-import com.geumatee.fieldincidentreporter.ui.form.IncidentFormScreen
-import com.geumatee.fieldincidentreporter.ui.form.IncidentFormUiState
 import com.geumatee.fieldincidentreporter.ui.theme.FieldIncidentReporterTheme
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -32,7 +30,7 @@ class IncidentFormScreenTest {
         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
 
     @Test
-    fun createModeRendersTitlesAndHidesDeleteAndStatusAndHandlesSaveAndBack() {
+    fun `create mode renders titles and hides delete and status and handles save and back`() {
         var backClicked = false
         var saveClicked = false
 
@@ -73,7 +71,7 @@ class IncidentFormScreenTest {
     }
 
     @Test
-    fun editModeShowsDeleteDialogAndHandlesCancelAndConfirm() {
+    fun `edit mode shows delete dialog and handles cancel and confirm`() {
         var deleteConfirmed = false
         var statusChanged: IncidentStatus? = null
 
@@ -128,7 +126,7 @@ class IncidentFormScreenTest {
     }
 
     @Test
-    fun displaysLoadingInitialDataState() {
+    fun `displays loading initial data state`() {
         composeTestRule.setContent {
             FieldIncidentReporterTheme {
                 IncidentFormScreen(
@@ -158,7 +156,7 @@ class IncidentFormScreenTest {
     }
 
     @Test
-    fun displaysSyncingIndicatorAndDisablesActionButtonsDuringNetworkLoad() {
+    fun `displays syncing indicator and disables action buttons during network load`() {
         composeTestRule.setContent {
             FieldIncidentReporterTheme {
                 IncidentFormScreen(
@@ -189,7 +187,7 @@ class IncidentFormScreenTest {
     }
 
     @Test
-    fun displaysValidationErrorsWhenPresent() {
+    fun `displays validation errors when present`() {
         composeTestRule.setContent {
             FieldIncidentReporterTheme {
                 IncidentFormScreen(
@@ -219,7 +217,7 @@ class IncidentFormScreenTest {
     }
 
     @Test
-    fun handlesTextInputsAndCallsCallbacks() {
+    fun `handles text inputs and calls callbacks`() {
         var changedTitle: String? = null
         var changedLocation: String? = null
         var changedDescription: String? = null
@@ -260,7 +258,7 @@ class IncidentFormScreenTest {
     }
 
     @Test
-    fun handlesCategoryAndSeverityChipClicks() {
+    fun `handles category and severity chip clicks`() {
         var categoryChanged: IncidentCategory? = null
         var severityChanged: IncidentSeverity? = null
 
@@ -296,7 +294,7 @@ class IncidentFormScreenTest {
     }
 
     @Test
-    fun handlesPhotoEvidenceStatesAndRemoveCallback() {
+    fun `handles photo evidence states and remove callback`() {
         var photoRemoved = false
 
         composeTestRule.setContent {
@@ -336,7 +334,7 @@ class IncidentFormScreenTest {
     }
 
     @Test
-    fun submittingStateDisablesInputsAndActionButtons() {
+    fun `submitting state disables inputs and action buttons`() {
         composeTestRule.setContent {
             FieldIncidentReporterTheme {
                 IncidentFormScreen(
@@ -370,7 +368,7 @@ class IncidentFormScreenTest {
     }
 
     @Test
-    fun errorStateDisablesActionButtonsAndInvokesReload() {
+    fun `error state disables action buttons and invokes reload`() {
         var reloadClicked = false
 
         composeTestRule.setContent {
@@ -407,7 +405,7 @@ class IncidentFormScreenTest {
     }
 
     @Test
-    fun saveErrorShowsRetryButtonAndInvokesReload() {
+    fun `save error shows retry button and invokes reload`() {
         var retryClicked = false
 
         composeTestRule.setContent {

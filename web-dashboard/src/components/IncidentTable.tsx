@@ -4,7 +4,9 @@ import {
   IncidentSeverity,
   IncidentStatus,
   SEVERITY_BADGE_CLASSES,
+  SEVERITY_LABELS,
   STATUS_BADGE_CLASSES,
+  STATUS_LABELS,
 } from "@/types/incident";
 
 interface IncidentTableProps {
@@ -134,7 +136,7 @@ export default function IncidentTable({
                         SEVERITY_BADGE_CLASSES.MEDIUM
                       }`}
                     >
-                      {incident.severity}
+                      {SEVERITY_LABELS[incident.severity] ?? incident.severity}
                     </span>
                     <div className="mt-2">
                       <select
@@ -148,9 +150,9 @@ export default function IncidentTable({
                         }
                         className="rounded border border-slate-300 bg-white px-2 py-1 text-xs text-slate-700 disabled:opacity-50"
                       >
-                        <option value="LOW">LOW</option>
-                        <option value="MEDIUM">MEDIUM</option>
-                        <option value="HIGH">HIGH</option>
+                        <option value="LOW">{SEVERITY_LABELS.LOW}</option>
+                        <option value="MEDIUM">{SEVERITY_LABELS.MEDIUM}</option>
+                        <option value="HIGH">{SEVERITY_LABELS.HIGH}</option>
                       </select>
                     </div>
                   </td>
@@ -162,7 +164,7 @@ export default function IncidentTable({
                         STATUS_BADGE_CLASSES.OPEN
                       }`}
                     >
-                      {incident.status.replace("_", " ")}
+                      {STATUS_LABELS[incident.status] ?? incident.status}
                     </span>
                     <div className="mt-2">
                       <select
@@ -176,9 +178,9 @@ export default function IncidentTable({
                         }
                         className="rounded border border-slate-300 bg-white px-2 py-1 text-xs text-slate-700 disabled:opacity-50"
                       >
-                        <option value="OPEN">OPEN</option>
-                        <option value="IN_PROGRESS">IN PROGRESS</option>
-                        <option value="RESOLVED">RESOLVED</option>
+                        <option value="OPEN">{STATUS_LABELS.OPEN}</option>
+                        <option value="IN_PROGRESS">{STATUS_LABELS.IN_PROGRESS}</option>
+                        <option value="RESOLVED">{STATUS_LABELS.RESOLVED}</option>
                       </select>
                     </div>
                   </td>

@@ -1,11 +1,8 @@
-package com.geumatee.fieldincidentreporter
+package com.geumatee.fieldincidentreporter.data
 
-import com.geumatee.fieldincidentreporter.data.IncidentApiService
-import com.geumatee.fieldincidentreporter.data.IncidentDto
 import kotlinx.coroutines.CompletableDeferred
 import okhttp3.ResponseBody.Companion.toResponseBody
 import retrofit2.Response
-import java.io.IOException
 
 // Uses a Fake over Mocks per Google testing guidance: avoids brittle method verification,
 // runs faster without reflection, and enables testing async gates and stateful behavior cleanly.

@@ -1,6 +1,6 @@
 package com.geumatee.fieldincidentreporter.ui.list
 
-import com.geumatee.fieldincidentreporter.FakeIncidentApiService
+import com.geumatee.fieldincidentreporter.data.FakeIncidentApiService
 import com.geumatee.fieldincidentreporter.MainDispatcherRule
 import com.geumatee.fieldincidentreporter.R
 import com.geumatee.fieldincidentreporter.data.IncidentDto

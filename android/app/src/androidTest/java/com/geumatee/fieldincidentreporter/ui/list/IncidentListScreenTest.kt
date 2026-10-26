@@ -1,4 +1,4 @@
-package com.geumatee.fieldincidentreporter.list
+package com.geumatee.fieldincidentreporter.ui.list
 
 import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.ui.test.assertIsDisplayed
@@ -13,8 +13,6 @@ import com.geumatee.fieldincidentreporter.model.Incident
 import com.geumatee.fieldincidentreporter.model.IncidentCategory
 import com.geumatee.fieldincidentreporter.model.IncidentSeverity
 import com.geumatee.fieldincidentreporter.model.IncidentStatus
-import com.geumatee.fieldincidentreporter.ui.list.IncidentListScreen
-import com.geumatee.fieldincidentreporter.ui.list.IncidentListUiState
 import com.geumatee.fieldincidentreporter.ui.theme.FieldIncidentReporterTheme
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
@@ -55,7 +53,7 @@ class IncidentListScreenTest {
     )
 
     @Test
-    fun displaysIncidentsAndHandlesCardAndThemeToggleClick() {
+    fun `displays incidents and handles card and theme toggle click`() {
         var clickedId: String? = null
         var themeToggled = false
 
@@ -85,7 +83,7 @@ class IncidentListScreenTest {
     }
 
     @Test
-    fun displaysLoadingState() {
+    fun `displays loading state`() {
         composeTestRule.setContent {
             FieldIncidentReporterTheme {
                 IncidentListScreen(
@@ -109,7 +107,7 @@ class IncidentListScreenTest {
     }
 
     @Test
-    fun displaysEmptyStateWhenNoIncidentsMatchFilter() {
+    fun `displays empty state when no incidents match filter`() {
         composeTestRule.setContent {
             FieldIncidentReporterTheme {
                 IncidentListScreen(
@@ -129,7 +127,7 @@ class IncidentListScreenTest {
     }
 
     @Test
-    fun filtersIncidentsBySelectedStatus() {
+    fun `filters incidents by selected status`() {
         composeTestRule.setContent {
             FieldIncidentReporterTheme {
                 IncidentListScreen(
@@ -148,7 +146,7 @@ class IncidentListScreenTest {
     }
 
     @Test
-    fun handlesStatusFilterBarClicks() {
+    fun `handles status filter bar clicks`() {
         var selected: IncidentStatus? = null
 
         composeTestRule.setContent {
@@ -178,7 +176,7 @@ class IncidentListScreenTest {
     }
 
     @Test
-    fun handlesTopBarRefreshAndFabCreateCallbacks() {
+    fun `handles top bar refresh and fab create callbacks`() {
         var refreshCalled = false
         var createCalled = false
 
@@ -206,7 +204,7 @@ class IncidentListScreenTest {
     }
 
     @Test
-    fun displaysErrorStateAndTriggersRetry() {
+    fun `displays error state and triggers retry`() {
         var retryClicked = false
 
         composeTestRule.setContent {
@@ -233,7 +231,7 @@ class IncidentListScreenTest {
     }
 
     @Test
-    fun displaysDefaultErrorMessageWhenUsingExplicitResource() {
+    fun `displays default error message when using explicit resource`() {
         composeTestRule.setContent {
             FieldIncidentReporterTheme {
                 IncidentListScreen(

@@ -26,7 +26,7 @@ A facility maintenance reporting system built with an Android client for field w
 field-incident-reporter/
 ├── android/            # Android client (Kotlin, Jetpack Compose, Material 3)
 │   ├── app/src/main/   # Feature packages: ui/ (form, list), data/, model/
-│   ├── app/src/test/   # 34 unit tests (DTOs, Repository, ViewModels)
+│   ├── app/src/test/   # 37 unit tests (DTOs, Repository, ViewModels, UI Mappers)
 │   └── app/src/androidTest/ # 20 Compose UI integration tests
 ├── backend/            # Mock REST API (json-server, seed data, reset script)
 ├── web-dashboard/      # Next.js 16 triage dashboard (React 19, Tailwind CSS v4)
@@ -114,7 +114,7 @@ Open `http://localhost:3000` in your browser.
 ```bash
 cd android
 
-# Run 34 unit tests (DTOs, Repository, ViewModels)
+# Run 37 unit tests (DTOs, Repository, ViewModels, UI Mappers)
 ./gradlew testDebugUnitTest
 
 # Run 20 Compose UI tests (requires running emulator/device)
@@ -134,6 +134,7 @@ npm run build
 ## Architecture & Notes
 
 - **API Contract:** Comprehensive REST endpoint specifications, field ownership, error envelope, and concurrency considerations are documented in [docs/api-contract.md](docs/api-contract.md).
+- **Clean Architecture Domain Isolation:** Domain models (`model/Incident.kt`) are 100% pure Kotlin with zero dependencies on Android framework resources (`R.string`) or Compose graphics. Localized UI labels and badge styling are decoupled into UI extension mappers (`IncidentUiMappers.kt`) and presentation components (`BadgeColors.kt`).
 - **Manual DI (`AppContainer`):** Kept dependencies lightweight with `AppContainer` instead of Hilt. This avoids kapt/ksp code-generation overhead and keeps clean build times fast. For a larger app with dozens of screens, migrating to Hilt would be the right trade-off.
 - **In-Memory SSOT (`MutableSharedFlow`):** `IncidentRepository` exposes an `incidentsFlow` (replay = 1) that automatically refreshes when incidents are created, updated, or deleted. This avoids passing reload callbacks between screens. Room was skipped for simplicity since offline database persistence wasn't required.
 - **Structured Concurrency (`runCatchingCancellable`):** Custom inline wrapper around `runCatching` that re-throws `CancellationException` so coroutine scopes cancel cleanly when leaving screens.

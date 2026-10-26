@@ -37,6 +37,7 @@ import com.geumatee.fieldincidentreporter.model.Incident
 import com.geumatee.fieldincidentreporter.model.IncidentCategory
 import com.geumatee.fieldincidentreporter.model.IncidentSeverity
 import com.geumatee.fieldincidentreporter.model.IncidentStatus
+import com.geumatee.fieldincidentreporter.ui.common.labelRes
 import com.geumatee.fieldincidentreporter.ui.theme.FieldIncidentReporterTheme
 import com.geumatee.fieldincidentreporter.util.ImageUtils
 import java.time.Instant

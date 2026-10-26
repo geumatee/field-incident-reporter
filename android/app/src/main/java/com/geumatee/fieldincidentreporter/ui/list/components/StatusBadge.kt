@@ -15,7 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.geumatee.fieldincidentreporter.model.IncidentStatus
-import com.geumatee.fieldincidentreporter.model.statusBadgeColors
+import com.geumatee.fieldincidentreporter.ui.common.labelRes
 import com.geumatee.fieldincidentreporter.ui.theme.FieldIncidentReporterTheme
 
 @Composable

@@ -61,6 +61,7 @@ import com.geumatee.fieldincidentreporter.R
 import com.geumatee.fieldincidentreporter.model.IncidentCategory
 import com.geumatee.fieldincidentreporter.model.IncidentSeverity
 import com.geumatee.fieldincidentreporter.model.IncidentStatus
+import com.geumatee.fieldincidentreporter.ui.common.labelRes
 import com.geumatee.fieldincidentreporter.ui.form.components.DeleteIncidentDialog
 import com.geumatee.fieldincidentreporter.ui.form.components.PhotoEvidenceSection
 import com.geumatee.fieldincidentreporter.ui.theme.FieldIncidentReporterTheme

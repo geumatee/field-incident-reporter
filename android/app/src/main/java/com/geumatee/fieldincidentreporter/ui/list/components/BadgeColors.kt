@@ -1,7 +1,9 @@
-package com.geumatee.fieldincidentreporter.model
+package com.geumatee.fieldincidentreporter.ui.list.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import com.geumatee.fieldincidentreporter.model.IncidentSeverity
+import com.geumatee.fieldincidentreporter.model.IncidentStatus
 import com.geumatee.fieldincidentreporter.ui.theme.Amber100
 import com.geumatee.fieldincidentreporter.ui.theme.Amber200
 import com.geumatee.fieldincidentreporter.ui.theme.Amber800

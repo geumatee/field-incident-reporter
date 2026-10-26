@@ -139,3 +139,13 @@ npm run build
 - **Structured Concurrency (`runCatchingCancellable`):** Custom inline wrapper around `runCatching` that re-throws `CancellationException` so coroutine scopes cancel cleanly when leaving screens.
 - **Fakes Over Mocks:** Unit tests use `FakeIncidentApiService` instead of MockK/Mockito to avoid fragile method call verification and enable testing async gates cleanly with `CompletableDeferred`.
 - **Photo Compression:** Photos are downscaled to 480px JPEG (~20-40 KB) and stored as Base64 Data URIs directly in JSON so `json-server` can persist them without a dedicated S3 bucket or file server.
+
+---
+
+## How I Used AI
+
+### Where AI Accelerated Development
+- **Boilerplate & Scaffolding:** Accelerated initial Jetpack Compose screen layouts, Retrofit interface declarations, DTO mappers, and Next.js Tailwind KPI card components.
+- **Test Generation & Coverage:** Assisted in brainstorming comprehensive boundary conditions across form validation, network edge cases, filter combinations, and Coroutine cancellation paths.
+- **Realistic Seed Data:** Assisted in synthesizing realistic facility maintenance records in `db.seed.json` across varied severities and categories.
+

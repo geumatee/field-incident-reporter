@@ -1,5 +1,7 @@
 package com.geumatee.fieldincidentreporter
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -35,14 +37,15 @@ import com.geumatee.fieldincidentreporter.ui.theme.FieldIncidentReporterTheme
 class MainActivity : ComponentActivity() {
 
     private companion object {
-        // Android 16 (API 37) requires runtime permission to communicate with local network hosts (10.0.2.2).
-        const val PERMISSION_ACCESS_LOCAL_NETWORK = "android.permission.ACCESS_LOCAL_NETWORK"
+        // Android 17 (API 37) requires runtime permission to communicate with local network hosts (10.0.2.2).
+        @SuppressLint("InlinedApi")
+        const val PERMISSION_ACCESS_LOCAL_NETWORK = Manifest.permission.ACCESS_LOCAL_NETWORK
     }
 
     private var hasLocalNetworkPermission by mutableStateOf(false)
 
     private fun checkLocalNetworkPermission(): Boolean {
-        return Build.VERSION.SDK_INT < 37 || checkSelfPermission(PERMISSION_ACCESS_LOCAL_NETWORK) == PackageManager.PERMISSION_GRANTED
+        return Build.VERSION.SDK_INT < Build.VERSION_CODES.CINNAMON_BUN || checkSelfPermission(PERMISSION_ACCESS_LOCAL_NETWORK) == PackageManager.PERMISSION_GRANTED
     }
 
     private val requestLocalNetworkLauncher = registerForActivityResult(
@@ -57,7 +60,7 @@ class MainActivity : ComponentActivity() {
         val repository = (application as IncidentApplication).container.incidentRepository
 
         hasLocalNetworkPermission = checkLocalNetworkPermission()
-        if (!hasLocalNetworkPermission && Build.VERSION.SDK_INT >= 37) {
+        if (!hasLocalNetworkPermission && Build.VERSION.SDK_INT >= Build.VERSION_CODES.CINNAMON_BUN) {
             requestLocalNetworkLauncher.launch(PERMISSION_ACCESS_LOCAL_NETWORK)
         }
 

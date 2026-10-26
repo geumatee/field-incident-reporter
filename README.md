@@ -41,7 +41,7 @@ cd android
 
 Run on an emulator or device running Android 10+ (API 29+).
 
-> **Android 16 note:** Android 16 (API 37) requires `ACCESS_LOCAL_NETWORK` permission to access host loopback (`10.0.2.2`). The app prompts for this on launch. If denied, the app provides a screen with a fallback button to App Settings.
+> **Android 17 note:** Android 17 (API 37) requires `ACCESS_LOCAL_NETWORK` permission to access host loopback (`10.0.2.2`). The app prompts for this on launch. If denied, the app provides a screen with a fallback button to App Settings.
 
 ### 3. Web Dashboard (Port 3000)
 
@@ -65,7 +65,7 @@ cd android
 # Run 34 unit tests (DTOs, Repository, ViewModels)
 ./gradlew testDebugUnitTest
 
-# Run Compose UI tests (requires running emulator/device)
+# Run 20 Compose UI tests (requires running emulator/device)
 ./gradlew connectedDebugAndroidTest
 ```
 

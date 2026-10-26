@@ -10,9 +10,9 @@ Recorded walkthroughs demonstrating the core flows across both platforms:
 
 | Feature / Flow | Platform | Recording Link | Notes |
 | :--- | :--- | :--- | :--- |
-| **Full End-to-End Walkthrough** | Android & Web | [Watch Video](docs/demo-full-walkthrough.mp4) | Complete 1–2 min flow: reporting on Android, triaging on Web, resolving incident |
-| **Android Incident Capture** | Android | [Watch Video](docs/demo-android-capture.mp4) | Form input validation, photo capture/picker, theme toggle, and offline handling |
-| **Operator Triage Console** | Web | [Watch Video](docs/demo-web-triage.mp4) | KPI metrics, search, filtering, inline severity/status updates, and photo preview |
+| **Full End-to-End Walkthrough** | Android & Web | <video src="https://github.com/user-attachments/assets/89861ad2-c528-45d2-afe1-f8e878ea09de" width="600" controls></video> | Complete 1–2 min flow: reporting on Android, triaging on Web, resolving incident |
+| **Android Incident Capture** | Android | <video src="https://github.com/user-attachments/assets/c6df4a6a-f9f4-4ce5-b03f-6ae5d304e6d2" width="600" controls></video> | Form input validation, photo capture/picker, theme toggle, and offline handling |
+| **Operator Triage Console** | Web | <video src="https://github.com/user-attachments/assets/157c5f97-3c5a-4276-b767-4a2e2a48fe5f" width="600" controls></video> | KPI metrics, search, filtering, inline severity/status updates, and photo preview |
 
 ---
 

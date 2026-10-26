@@ -111,13 +111,15 @@ class IncidentFormViewModel(
                 .onFailure { error ->
                     if (isNotFound(error)) {
                         lastFailedOperation = null
-                        runCatching { repository.refreshIncidents() }
                         _uiState.update {
                             it.copy(
                                 isLoadingInitialData = false,
                                 isLoadingNetwork = false,
                                 isSavedOrDeleted = true
                             )
+                        }
+                        viewModelScope.launch {
+                            runCatching { repository.refreshIncidents() }
                         }
                     } else {
                         lastFailedOperation = PendingOperation.LOAD

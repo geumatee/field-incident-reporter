@@ -116,7 +116,7 @@ class MainActivity : ComponentActivity() {
                                     viewModel = formViewModel,
                                     onNavigateBack = {
                                         if (backStackEntry.lifecycle.currentState.isAtLeast(
-                                                Lifecycle.State.RESUMED
+                                                Lifecycle.State.STARTED
                                             )
                                         ) {
                                             navController.popBackStack()

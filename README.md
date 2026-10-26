@@ -4,6 +4,37 @@ A facility maintenance reporting system built with an Android client for field w
 
 ---
 
+## Architecture Overview
+
+```
+┌────────────────────────────────┐       ┌────────────────────────────────┐
+│       Android Mobile App       │       │      Web Operator Console      │
+│  (Compose, MVVM, Coroutines)   │       │     (Next.js 16, React 19)     │
+└──────────────┬─────────────────┘       └────────────────┬───────────────┘
+               │                                          │
+               │ REST (Retrofit / OkHttp)                 │ REST (fetch)
+               ▼                                          ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│                     Mock REST API (json-server :3001)                   │
+│                    Database Storage: backend/db.json                    │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+### Project Structure
+
+```
+field-incident-reporter/
+├── android/            # Android client (Kotlin, Jetpack Compose, Material 3)
+│   ├── app/src/main/   # Feature packages: ui/ (form, list), data/, model/
+│   ├── app/src/test/   # 34 unit tests (DTOs, Repository, ViewModels)
+│   └── app/src/androidTest/ # 20 Compose UI integration tests
+├── backend/            # Mock REST API (json-server, seed data, reset script)
+├── web-dashboard/      # Next.js 16 triage dashboard (React 19, Tailwind CSS v4)
+└── docs/               # REST API contract specification and demo videos
+```
+
+---
+
 ## Demo Videos & Screen Recordings
 
 Recorded walkthroughs demonstrating the core flows across both platforms:
@@ -13,6 +44,17 @@ Recorded walkthroughs demonstrating the core flows across both platforms:
 | **Full End-to-End Walkthrough** | Android & Web | <video src="https://github.com/user-attachments/assets/89861ad2-c528-45d2-afe1-f8e878ea09de" width="600" controls></video> | Complete 1–2 min flow: reporting on Android, triaging on Web, resolving incident |
 | **Android Incident Capture** | Android | <video src="https://github.com/user-attachments/assets/c6df4a6a-f9f4-4ce5-b03f-6ae5d304e6d2" width="600" controls></video> | Form input validation, photo capture/picker, theme toggle, and offline handling |
 | **Operator Triage Console** | Web | <video src="https://github.com/user-attachments/assets/157c5f97-3c5a-4276-b767-4a2e2a48fe5f" width="600" controls></video> | KPI metrics, search, filtering, inline severity/status updates, and photo preview |
+
+---
+
+## Prerequisites
+
+Before running the project, ensure your environment has:
+
+- **Node.js:** v20.x or higher (`node -v`) and npm v10+
+- **JDK:** Java 17+ (e.g. Eclipse Adoptium or Android Studio bundled JBR)
+- **Android Studio:** Ladybug / Meerkat or later (supports AGP 9.4 and compileSdk 37)
+- **Android Runtime:** Android Emulator or physical device running Android 10+ (API 29+)
 
 ---
 
@@ -28,7 +70,12 @@ npm install
 npm start
 ```
 
-API is hosted at `http://localhost:3001/incidents` (accessible from Android emulator at `http://10.0.2.2:3001/incidents`).
+API runs at `http://localhost:3001/incidents` (accessible from the Android emulator at `http://10.0.2.2:3001/incidents`).
+
+> **Resetting Demo Data:** During testing and evaluation, creating or editing incidents modifies `backend/db.json`. To restore the database to its pristine seed state at any time, run:
+> ```bash
+> npm run reset
+> ```
 
 ### 2. Android App
 
@@ -39,7 +86,12 @@ cd android
 ./gradlew assembleDebug
 ```
 
-Run on an emulator or device running Android 10+ (API 29+).
+Run on an Android emulator running Android 10+ (API 29+).
+
+> **Physical Device Connectivity:** The Android client defaults to the emulator loopback interface (`10.0.2.2:3001`). If deploying to a physical hardware device connected via USB, enable reverse port-forwarding:
+> ```bash
+> adb reverse tcp:3001 tcp:3001
+> ```
 
 > **Android 17 note:** Android 17 (API 37) requires `ACCESS_LOCAL_NETWORK` permission to access host loopback (`10.0.2.2`). The app prompts for this on launch. If denied, the app provides a screen with a fallback button to App Settings.
 
@@ -55,7 +107,7 @@ Open `http://localhost:3000` in your browser.
 
 ---
 
-## Testing
+## Testing & Quality Checks
 
 ### Android Tests
 

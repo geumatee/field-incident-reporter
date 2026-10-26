@@ -37,6 +37,13 @@ object ImageUtils {
         return dataUri
     }
 
+    fun getCachedBitmap(dataUri: String?): Bitmap? {
+        if (dataUri.isNullOrBlank()) return null
+        synchronized(bitmapCache) {
+            return bitmapCache[dataUri]
+        }
+    }
+
     fun base64DataUriToBitmap(dataUri: String?): Bitmap? {
         if (dataUri.isNullOrBlank()) return null
         synchronized(bitmapCache) {

@@ -17,6 +17,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.time.Instant
@@ -25,7 +27,8 @@ import java.util.UUID
 
 class IncidentFormViewModel(
     private val repository: IncidentRepository,
-    private val incidentId: String?
+    private val incidentId: String?,
+    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -204,8 +207,10 @@ class IncidentFormViewModel(
     fun onPhotoSelected(bitmap: Bitmap) {
         hasUserEdited = true
         clearSaveErrorIfPresent()
-        val dataUri = ImageUtils.bitmapToBase64DataUri(bitmap)
-        _uiState.update { it.copy(imageDataUri = dataUri) }
+        viewModelScope.launch(defaultDispatcher) {
+            val dataUri = ImageUtils.bitmapToBase64DataUri(bitmap)
+            _uiState.update { it.copy(imageDataUri = dataUri) }
+        }
     }
 
     fun onRemovePhoto() {

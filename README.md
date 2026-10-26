@@ -26,7 +26,7 @@ A facility maintenance reporting system built with an Android client for field w
 field-incident-reporter/
 ├── android/            # Android client (Kotlin, Jetpack Compose, Material 3)
 │   ├── app/src/main/   # Feature packages: ui/ (form, list), data/, model/
-│   ├── app/src/test/   # 37 unit tests (DTOs, Repository, ViewModels, UI Mappers)
+│   ├── app/src/test/   # 40 unit tests (DTOs, Repository, ViewModels, UI Mappers, ImageUtils)
 │   └── app/src/androidTest/ # 20 Compose UI integration tests
 ├── backend/            # Mock REST API (json-server, seed data, reset script)
 ├── web-dashboard/      # Next.js 16 triage dashboard (React 19, Tailwind CSS v4)
@@ -114,7 +114,7 @@ Open `http://localhost:3000` in your browser.
 ```bash
 cd android
 
-# Run 37 unit tests (DTOs, Repository, ViewModels, UI Mappers)
+# Run 40 unit tests (DTOs, Repository, ViewModels, UI Mappers, ImageUtils)
 ./gradlew testDebugUnitTest
 
 # Run 20 Compose UI tests (requires running emulator/device)
@@ -139,7 +139,7 @@ npm run build
 - **In-Memory SSOT (`MutableSharedFlow`):** `IncidentRepository` exposes an `incidentsFlow` (replay = 1) that automatically refreshes when incidents are created, updated, or deleted. This avoids passing reload callbacks between screens. Room was skipped for simplicity since offline database persistence wasn't required.
 - **Structured Concurrency (`runCatchingCancellable`):** Custom inline wrapper around `runCatching` that re-throws `CancellationException` so coroutine scopes cancel cleanly when leaving screens.
 - **Fakes Over Mocks:** Unit tests use `FakeIncidentApiService` instead of MockK/Mockito to avoid fragile method call verification and enable testing async gates cleanly with `CompletableDeferred`.
-- **Photo Compression:** Photos are downscaled to 480px JPEG (~20-40 KB) and stored as Base64 Data URIs directly in JSON so `json-server` can persist them without a dedicated S3 bucket or file server.
+- **Photo Processing & Async Decoding:** Photos are downscaled to 480px JPEG (~20-40 KB) and stored as Base64 Data URIs directly in JSON for mock json-server persistence. Photo compression and Base64 encoding are offloaded to background worker threads (`Dispatchers.Default`) via `IncidentFormViewModel`. On the UI layer, `IncidentCard` and `PhotoEvidenceSection` use `produceState` with a synchronous memory cache to decode Bitmaps asynchronously off the Main thread, preventing frame drops during list scrolling.
 
 ---
 

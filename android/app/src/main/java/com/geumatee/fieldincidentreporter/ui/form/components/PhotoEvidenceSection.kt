@@ -1,6 +1,7 @@
 package com.geumatee.fieldincidentreporter.ui.form.components
 
 import android.content.res.Configuration
+import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -16,7 +17,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
@@ -39,8 +44,15 @@ fun PhotoEvidenceSection(
     onRemovePhotoClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val previewBitmap = remember(imageDataUri) {
-        ImageUtils.base64DataUriToBitmap(imageDataUri)
+    val previewBitmap by produceState<Bitmap?>(
+        initialValue = ImageUtils.getCachedBitmap(imageDataUri),
+        key1 = imageDataUri
+    ) {
+        if (value == null && !imageDataUri.isNullOrBlank()) {
+            value = withContext(Dispatchers.Default) {
+                ImageUtils.base64DataUriToBitmap(imageDataUri)
+            }
+        }
     }
 
     Column(
@@ -53,12 +65,13 @@ fun PhotoEvidenceSection(
             fontWeight = FontWeight.Medium
         )
 
-        if (previewBitmap != null) {
-            val aspectRatio = remember(previewBitmap) {
-                (previewBitmap.width.toFloat() / previewBitmap.height.toFloat()).coerceAtLeast(0.1f)
+        val currentPreview = previewBitmap
+        if (currentPreview != null) {
+            val aspectRatio = remember(currentPreview) {
+                (currentPreview.width.toFloat() / currentPreview.height.toFloat()).coerceAtLeast(0.1f)
             }
             Image(
-                bitmap = previewBitmap.asImageBitmap(),
+                bitmap = currentPreview.asImageBitmap(),
                 contentDescription = stringResource(R.string.cd_captured_photo),
                 modifier = Modifier
                     .fillMaxWidth()

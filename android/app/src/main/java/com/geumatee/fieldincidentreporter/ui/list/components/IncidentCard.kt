@@ -1,6 +1,7 @@
 package com.geumatee.fieldincidentreporter.ui.list.components
 
 import android.content.res.Configuration
+import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -20,7 +21,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -50,8 +55,15 @@ fun IncidentCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val bitmap = remember(incident.imageUrl) {
-        ImageUtils.base64DataUriToBitmap(incident.imageUrl)
+    val bitmap by produceState<Bitmap?>(
+        initialValue = ImageUtils.getCachedBitmap(incident.imageUrl),
+        key1 = incident.imageUrl
+    ) {
+        if (value == null && !incident.imageUrl.isNullOrBlank()) {
+            value = withContext(Dispatchers.Default) {
+                ImageUtils.base64DataUriToBitmap(incident.imageUrl)
+            }
+        }
     }
 
     Card(
@@ -67,9 +79,10 @@ fun IncidentCard(
                 .padding(14.dp),
             verticalAlignment = Alignment.Top
         ) {
-            if (bitmap != null) {
+            val currentBitmap = bitmap
+            if (currentBitmap != null) {
                 Image(
-                    bitmap = bitmap.asImageBitmap(),
+                    bitmap = currentBitmap.asImageBitmap(),
                     contentDescription = null,
                     modifier = Modifier
                         .size(64.dp)

@@ -9,6 +9,7 @@ import {
   updateIncident,
 } from "@/services/incidentApi";
 import KpiSummaryCards from "@/components/KpiSummaryCards";
+import IncidentFilterBar from "@/components/IncidentFilterBar";
 import IncidentTable from "@/components/IncidentTable";
 import PhotoPreviewModal from "@/components/PhotoPreviewModal";
 
@@ -22,6 +23,10 @@ export default function OperatorDashboardPage() {
     title: string;
   } | null>(null);
 
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [statusFilter, setStatusFilter] = useState<string>("ALL");
+  const [severityFilter, setSeverityFilter] = useState<string>("ALL");
+  const [categoryFilter, setCategoryFilter] = useState<string>("ALL");
 
   async function loadIncidents() {
     setIsLoading(true);
@@ -88,6 +93,21 @@ export default function OperatorDashboardPage() {
     }
   }
 
+  const query = searchQuery.trim().toLowerCase();
+  const filteredIncidents = incidents.filter((incident) => {
+    if (statusFilter !== "ALL" && incident.status !== statusFilter) return false;
+    if (severityFilter !== "ALL" && incident.severity !== severityFilter)
+      return false;
+    if (categoryFilter !== "ALL" && incident.category !== categoryFilter)
+      return false;
+    if (query.length > 0) {
+      const matchesTitle = incident.title.toLowerCase().includes(query);
+      const matchesLocation = incident.location.toLowerCase().includes(query);
+      if (!matchesTitle && !matchesLocation) return false;
+    }
+    return true;
+  });
+
   return (
     <div className="min-h-screen bg-slate-50">
       <header className="border-b border-slate-200 bg-white">
@@ -115,6 +135,17 @@ export default function OperatorDashboardPage() {
       <main className="mx-auto max-w-7xl space-y-6 px-6 py-6">
         <KpiSummaryCards incidents={incidents} />
 
+        <IncidentFilterBar
+          searchQuery={searchQuery}
+          statusFilter={statusFilter}
+          severityFilter={severityFilter}
+          categoryFilter={categoryFilter}
+          onSearchQueryChange={setSearchQuery}
+          onStatusFilterChange={setStatusFilter}
+          onSeverityFilterChange={setSeverityFilter}
+          onCategoryFilterChange={setCategoryFilter}
+        />
+
         {error && (
           <div className="flex items-center justify-between rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
             <span>{error}</span>
@@ -129,7 +160,7 @@ export default function OperatorDashboardPage() {
         )}
 
         <IncidentTable
-          incidents={incidents}
+          incidents={filteredIncidents}
           isLoading={isLoading}
           updatingId={updatingId}
           onUpdateIncident={handleUpdateIncident}
